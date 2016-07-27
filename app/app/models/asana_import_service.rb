@@ -46,10 +46,10 @@ class AsanaImportService
       assigner.activate
       assigner.password, assigner.password_confirmation = 'Commandp123', 'Commandp123'
       assigner.save(validate: false)
+      project.add_default_member(assigner) unless project.members.pluck(:id).include?(assigner.id)
+      project.save
     end
 
-    project.add_default_member(assigner) unless project.members.pluck(:id).include?(assigner.id)
-    project.save
     assigner
   end
 
@@ -61,10 +61,10 @@ class AsanaImportService
     issue.tracker = ::Tracker.first
     issue.status = ::IssueStatus.first
     issue.priority = ::IssuePriority.first
-    issue.assigned_to = assigner if assigner
-    issue.safe_attributes = issue_attributes(row)
+    issue.safe_attributes = issue_attributes(assigner, row)
     issue.save!
   rescue => e
+    binding.pry
     errors.push(row[0], e.to_s)
   end
 
@@ -81,13 +81,15 @@ class AsanaImportService
     }
   end
 
-  def issue_attributes(row)
+  def issue_attributes(assigner, row)
     {
       'is_private' => '0',
       'subject'=> row[4],
       'description'=> row[8],
+      'assigned_to_id' => assigner.try(:id).to_s,
       'start_date' => row[1],
       'done_ratio' => '0',
+      'watcher_user_ids' => [user.id]
     }
   end
 

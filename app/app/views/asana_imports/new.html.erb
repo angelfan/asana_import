@@ -1,0 +1,13 @@
+<h2><%= l(:asana_impport) %></h2>
+
+<%= form_tag asana_imports_path, method: :post, multipart: true do  %>
+    <div class='box tabular'>
+      <p>
+        <%= file_field_tag :csv %>
+      </p>
+    </div>
+
+    <p>
+      <%= submit_tag l(:button_submit) %>
+    </p>
+<% end %>
