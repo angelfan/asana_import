@@ -1,0 +1,89 @@
+Task ID,Created At,Completed At,Last Modified,Name,Assignee,Due Date,Tags,Notes,Projects,Parent Task
+91028528331907,2016-02-17,2016-02-17,2016-02-17,hi Aaron,,,,,Web Sprint Board,
+86344207730806,2016-02-01,2016-02-02,2016-02-16,[網站]doorkeeper增加繁體、簡體中文翻譯,nazi9999,,B-3.65.0,,Web Sprint Board,
+85407891254910,2016-01-29,2016-02-03,2016-02-03,[API V3]api 文件參數與特定欄位值補齊,nazi9999,,,"如題：
+1. 讓文件的參數可判斷選填或必填
+2. 參數如果僅接受某特定值也要追加",Web Sprint Board,
+85407891254907,2016-01-29,2016-02-03,2016-02-03,[API V3]postman整理功能追加,nazi9999,,,"1. 各api敘述補上文件網址、欄位特定值提醒
+2. access_token, client_id, client_secret, device_token改用環境變數
+3. 多參數時，把選填的參數設為選填忽略（不打勾狀態）
+4. 記錄response",Web Sprint Board,
+76567193427006,2015-12-28,2015-12-30,2015-12-30,migrate 要先跑20151225064747才能跑 20151224081227,,,,"bundle exec rake db:migrate:up VERSION=20151225064747
+bundle exec rake db:migrate
+否則會爆掉...
+
+或是改 code
+
+",Web Sprint Board,
+75718004702637,2015-12-21,2015-12-21,2015-12-21,［15］增加coupon的测试代码和处理异常订单,zhusan,,sprint s8,记分用,Web Sprint Board,
+75703195183857,2015-12-21,2015-12-21,2015-12-21,[15]修复coupon的相关问题,zhusan,,sprint s9,"1: 问题： https://rollbar.com/commandp/commandp/items/3342/
+    原因： 应该是代码deploy完到sidekiq重启之间有生成coupon，造成有6个     coupon的base_price_type的值为空
+    解决： hotfix修复这6条数据","Web Sprint Board,Coupon Code",
+68838333357745,2015-11-25,2015-11-29,2015-12-28,[Duplicate] coupon code 的折抵要能反應在 order_item 上,,,,"現在的 Coupon code 折抵會反應在整筆訂單上。Order#discount
+然而，之後的 Coupon Code 會有針對單筆商品折扣的情況出現（EX: 此 coupon code 只針對某個設計師商品），所以之後算 discount 時，要能夠體現在每一個 item 上
+
+技術建議是新增  OrderItem#discount 並會根據 coupon code 算出來","Web Sprint Board,Coupon Code",
+68040469481122,2015-11-23,2015-11-23,2015-11-23,每天早上發一份 Order Report 給張穎,Manic Chuang,2015-11-23,,,Web Sprint Board,
+68158174555785,2015-11-23,2015-11-25,2015-11-25,每天早上發一份 Order Report 給張穎,Manic Chuang,2015-11-24,,,Web Sprint Board,
+69121120609657,2015-11-25,2015-11-27,2015-11-27,每天早上發一份 Order Report 給張穎,Manic Chuang,2015-11-27,,,Web Sprint Board,
+69365206188024,2015-11-27,2015-11-27,2015-11-27,每天早上發一份 Order Report 給張穎,Manic Chuang,,,,Web Sprint Board,
+65767430418047,2015-11-13,2015-11-15,2015-11-15,[管易] 本週進度,,,,,Web Sprint Board,
+65767430418049,2015-11-13,2015-11-15,2015-11-15,[3] 修正訂單狀態：支付寶/微信以退款但訂單沒同步到,Manic Chuang,,sprint s4,"手動修正: 已在 admin 後台處理 8/9/10 月份的訂單
+
+",Web Sprint Board,[管易] 本週進度
+54333276941849,2015-09-30,2015-10-11,2015-10-11,提供設計師 9 月份設計師銷售報表,Rich Ke,2015-10-05,,"報表撈取條件：
+
+1.  設計師 ID (Designer ID) : 
+
+duncandesign
+
+bgmen
+bounce
+justinchou
+
+bosstwo
+darylhochi
+
+thechick
+2. 統計日期區間： 
+
+9/1 - 9/30
+3. 訂單數量：
+
+Daily
+by Designer ID
+
+4. 商品銷售數量：
+
+Daily
+by Designer ID
+5. 銷售金額（需扣除貨到付款運費）：
+
+Daily
+by Designer ID
+6. 銷售細項：
+
+Daily
+by Designer ID
+by Designer work 
+by Designer work's product model",Web Sprint Board,設計師銷售彙總-9月
+63253701590382,2015-11-04,2015-11-29,2015-11-29,建構 Testlink 環境,Sammy Lin,,,"需求說明：
+為了日後長遠的人工測試作業，需要一個可以有效管理 test plan, test case 及監控 test result 的工具
+
+免費工具可以參考：https://www.ibm.com/developerworks/cn/opensource/os-testlink/
+
+解法：（Sammy 決定作法後回覆）
+
+","Web Sprint Board,Web Development,Cluster Management",
+73087619168928,2015-12-10,2015-12-11,2015-12-11,Coupon code 協助產生,Peter Liu,,,"麻烦在今天下午 3 点前，能以 Excel 或是 CSV 形式，给https://app.asana.com/0/64088005064485/64088005064485 以下規格的coupon code：
+
+
+Greater than：3100
+Name：59store_15元充电宝
+$ takes：Tier27/TWD 427=CNY84 off for orders over Tier 32 /TWD 499=CNY99
+Coupon begins：2015年12月11日
+Coupon expires：2016年1月31日
+
+站點：中國站/正式機
+
+",Web Sprint Board,
