@@ -6,5 +6,5 @@ Redmine::Plugin.register :asana_import do
   url 'http://example.com/path/to/plugin'
   author_url 'http://example.com/about'
 
-  menu :top_menu, :asana_imports, '/asana_imports/new', :caption => :asana_imports, :after => :projects, :if => Proc.new { User.current.admin? }
+  menu :top_menu, :asana_imports, { controller: 'asana_imports', action: 'new' }, caption: :asana_imports, after: :projects, if: proc { User.current.admin? }
 end

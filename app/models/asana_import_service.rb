@@ -28,9 +28,7 @@ class AsanaImportService
 
   def create_project
     project = Project.find_or_initialize_by(identifier: filename.downcase)
-    if project.new_record?
-      project.name = filename.gsub('_', ' ')
-    end
+    project.name = filename.tr('_', ' ') if project.new_record?
     project.add_default_member(user)
     project.save
     project
@@ -38,13 +36,14 @@ class AsanaImportService
 
   def find_or_initialize_assigner(assigner_name)
     return false if assigner_name.blank?
-    login = assigner_name.gsub(' ', '').downcase
+    login = ExtractName.new(assigner_name).login
     assigner = User.find_or_initialize_by(login: login)
     if assigner.new_record?
       assigner.safe_attributes = user_attributes(assigner_name)
       assigner.login = login
       assigner.activate
-      assigner.password, assigner.password_confirmation = 'Commandp123', 'Commandp123'
+      assigner.password = 'Commandp123'
+      assigner.password_confirmation = 'Commandp123'
       assigner.save(validate: false)
     end
 
@@ -58,9 +57,9 @@ class AsanaImportService
     issue = Issue.new
     issue.project = project
     issue.author = user
-    issue.tracker = ::Tracker.first
-    issue.status = ::IssueStatus.first
-    issue.priority = ::IssuePriority.first
+    issue.tracker = tracker
+    issue.status = status
+    issue.priority = priority
     issue.assigned_to = assigner if assigner
     issue.safe_attributes = issue_attributes(row)
     issue.save!
@@ -68,14 +67,24 @@ class AsanaImportService
     errors.push(row[0], e.to_s)
   end
 
+  def tracker
+    @tracker ||= ::Tracker.first
+  end
+
+  def status
+    @status ||= ::IssueStatus.first
+  end
+
+  def priority
+    @priority ||= ::IssuePriority.first
+  end
+
   def user_attributes(assigner_name)
-    firstname = assigner_name.split(' ').first
-    lastname = assigner_name.split(' ').last
-    lastname = lastname == firstname ? '' : lastname
+    extract_name = ExtractName.new(assigner_name)
     {
-      'firstname' => firstname,
-      'lastname' => lastname,
-      'mail' => "#{assigner_name.gsub(' ', '')}@commandp.com",
+      'firstname' => extract_name.firstname,
+      'lastname' => extract_name.lastname,
+      'mail' => extract_name.mail,
       'admin' => 'false',
       'language' => I18n.locale
     }
@@ -84,11 +93,54 @@ class AsanaImportService
   def issue_attributes(row)
     {
       'is_private' => '0',
-      'subject'=> row[4],
-      'description'=> row[8],
+      'subject' => row[4],
+      'description' => row[8],
       'start_date' => row[1],
-      'done_ratio' => '0',
+      'done_ratio' => '0'
     }
+  end
+
+  class ExtractName
+    attr_reader :assigner_name
+    attr_reader :login, :firstname, :lastname, :mail
+
+    MATCH_LIST = {
+      'sammy.lin' => 'sammylin',
+      'jimmy.kuo' => 'jimmy'
+    }.freeze
+
+    def initialize(assigner_name)
+      @assigner_name = assigner_name
+      result = extract
+      @login = result[:login]
+      @firstname = result[:firstname]
+      @lastname = result[:lastname]
+      @mail = result[:mail]
+    end
+
+    private
+
+    def extract
+      if assigner_name.include?('@')
+        login = assigner_name.split('@').first
+        firstname = login.split('.').first
+        lastname = login.split('.').last
+        mail = assigner_name
+      else
+        login = assigner_name.tr(' ', '.').downcase
+        firstname = assigner_name.split(' ').first
+        lastname = assigner_name.split(' ').last
+        mail = "#{assigner_name.tr(' ', '.').downcase}@commandp.com"
+      end
+      lastname = lastname == firstname ? '' : lastname
+
+      {
+        login: MATCH_LIST[login] || login,
+        firstname: firstname,
+        lastname: lastname,
+        mail: mail
+      }
+    end
   end
 
   class Errors
@@ -111,7 +163,7 @@ class AsanaImportService
     end
 
     def full_messages
-      @errors.map {|key, msg| "#{key}: #{msg}"}.join('</br> ')
+      @errors.map { |key, msg| "#{key}: #{msg}" }.join('</br> ')
     end
   end
 end

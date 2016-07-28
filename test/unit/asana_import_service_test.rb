@@ -12,9 +12,9 @@ class AsanaImportServiceTest < ActiveSupport::TestCase
   def setup
     csv_path = Rails.root.join('plugins/asana_import/test/fixtures/files/Web_Sprint_Board.csv').to_s
     csv = ActionDispatch::Http::UploadedFile.new(
-        filename: File.basename(csv_path), tempfile: File.open(csv_path)
+      filename: File.basename(csv_path), tempfile: File.open(csv_path)
     )
-    service  = AsanaImportService.new(csv, User.first)
+    service = AsanaImportService.new(csv, User.first)
     service.import
   end
 
@@ -45,7 +45,7 @@ class AsanaImportServiceTest < ActiveSupport::TestCase
   end
 
   def test_manic_name
-    manic = User.find_by(login: 'manicchuang')
+    manic = User.find_by(login: 'manic.chuang')
     assert_equal 'Manic', manic.firstname
     assert_equal 'Chuang', manic.lastname
   end
